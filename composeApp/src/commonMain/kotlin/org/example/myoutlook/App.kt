@@ -17,28 +17,30 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import myoutlook.composeapp.generated.resources.Res
 import myoutlook.composeapp.generated.resources.compose_multiplatform
+import org.example.myoutlook.data.Repo.AuthRepositoryImpl
+import org.example.myoutlook.domain.repo.AuthRepo
+import org.example.myoutlook.domain.useCases.LoginUserUseCase
+import org.example.myoutlook.presentation.auth.AuthScreen
+import org.example.myoutlook.presentation.auth.AuthViewModel
+import org.example.myoutlook.presentation.auth.AuthViewModelFactory
 
 @Composable
 @Preview
 fun App() {
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
+        // Create and remember the ViewModel
+        val viewModel = remember {
+            AuthViewModelFactory().create(AuthViewModel::class)
+        }
+
         Column(
             modifier = Modifier
                 .safeContentPadding()
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { sendMessage() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
-            }
+            AuthScreen(viewModel = viewModel)
         }
     }
 }
+
